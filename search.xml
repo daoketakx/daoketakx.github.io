@@ -23,13 +23,12 @@
 </ul>
 </blockquote>
 <h3 id="实验过程"><a href="#实验过程" class="headerlink" title="实验过程"></a>实验过程</h3><h4 id="实验命名"><a href="#实验命名" class="headerlink" title="实验命名"></a>实验命名</h4><p>网络系统命名为: <code>西财退休办网络系统搭建及分析</code> (O.o)</p>
-<h4 id="实验拓扑"><a href="#实验拓扑" class="headerlink" title="实验拓扑"></a>实验拓扑</h4><img  src="/images/network_work.png" data-
+<h4 id="实验拓扑"><a href="#实验拓扑" class="headerlink" title="实验拓扑"></a>实验拓扑</h4><p><img  
                      lazyload
                      src="/images/loading.svg"
                      data-src="/images/network_work.png"
-                      alt="拓扑图"
-                >
-
+                      alt="拓扑图" title="拓扑图"
+                ></p>
 <p>这次实验使用了两台路由器，两台交换机，三台主机，其中一台主机用于模拟服务器。  </p>
 <p>由两台主机模拟两个部门，需要实现两个部门之间的通信和两个部门与服务器之间的通信。</p>
 <p>将两个主机ip设置为不同网段的公网IP(实验要求不能使用可复用IP地址)，通过交换机SW-1连接两台主机，此时交换机为三层交换机，将交换机0&#x2F;1~10端口划分为VLAN10，交换机0&#x2F;11~23端口划分为VLAN20，端口均设置为access，对0&#x2F;24口配置为trunk口并放行VLAN10和VLAN20，此端口连接 路由器R1 0&#x2F;0端口，对 R1 0&#x2F;0端口配置两个子接口IP设置为两个部门的网关，此时路由R1为SW-1的单臂路由，R1的Serial0口和R2的Serial0端口连接，R2的Serial0端口连接，均对两台路由配置ospf协议和ppp协议实现两个路由间通信，R2 0&#x2F;0端口配置IP为server的网关并连接交换机SW-2，交换机SW-2连接server。</p>
