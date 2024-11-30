@@ -1,21 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Hello World</title>
-    <url>/2024/11/30/hello-world/</url>
-    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+    <title>[记计网的一次课设]</title>
+    <url>/2024/11/30/%E8%AE%B0%E8%AE%A1%E7%BD%91%E7%9A%84%E4%B8%80%E6%AC%A1%E8%AF%BE%E8%AE%BE/</url>
+    <content><![CDATA[<h2 id="记计网的一次课设"><a href="#记计网的一次课设" class="headerlink" title="记计网的一次课设"></a>记计网的一次课设</h2><h3 id="大作业要求"><a href="#大作业要求" class="headerlink" title="大作业要求"></a>大作业要求</h3><blockquote>
+<ul>
+<li>本大作业使用网络实验室的锐捷网络设备完成</li>
+<li>3~4人一组(每个机柜两组),自由组合</li>
+<li>每组以2个路由器和2个交换机的设备规模设计网络</li>
+<li>小组成员自行给出所设计网络系统的名称</li>
+<li>大作业题目的构成要求:xxx网络系统搭建及分析</li>
+<li>其中xxx代表某企业或机构名称,如：蓝天无人机公司网络系统搭建及分析。</li>
+<li>网络中包含多个局域网段</li>
+<li>网络中要有广域网连接(使用串行链路模拟广域网连接)</li>
+<li>规划并分配IP地址,不能使用可复用IP地址(NAT内网除外)</li>
+<li>使用Packet Tracer画出网络系统拓扑图</li>
+<li>多个路由器之间运行路由协议</li>
+<li>在某一个网段中运行一个服务器</li>
+<li>确保每个网段互连互通，客户端可以跨广域网访问服务器</li>
+<li>在客户端使用Wireshark抓包,捕获与服务器之间的通信数据</li>
+<li>分别对数据包的应用层、运输层、网络层、数据链路层协议字段中的内容给出分析说明</li>
+</ul>
+</blockquote>
+<h3 id="实验过程"><a href="#实验过程" class="headerlink" title="实验过程"></a>实验过程</h3><h4 id="实验命名"><a href="#实验命名" class="headerlink" title="实验命名"></a>实验命名</h4><p>网络系统命名为: <code>西财退休办网络系统搭建及分析</code> (O.o)</p>
+<h4 id="实验拓扑"><a href="#实验拓扑" class="headerlink" title="实验拓扑"></a>实验拓扑</h4><p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/%5Cimages%5Cnetwork_work.png"
+                      alt="拓扑图"
+                ></p>
+<p>这次实验使用了两台路由器，两台交换机，三台主机，其中一台主机用于模拟服务器。  </p>
+<p>由两台主机模拟两个部门，需要实现两个部门之间的通信和两个部门与服务器之间的通信。</p>
+<p>将两个主机ip设置为不同网段的公网IP(实验要求不能使用可复用IP地址)，通过交换机SW-1连接两台主机，此时交换机为三层交换机，将交换机0&#x2F;1~10端口划分为VLAN10，交换机0&#x2F;11~23端口划分为VLAN20，端口均设置为access，对0&#x2F;24口配置为trunk口并放行VLAN10和VLAN20，此端口连接 路由器R1 0&#x2F;0端口，对 R1 0&#x2F;0端口配置两个子接口IP设置为两个部门的网关，此时路由R1为SW-1的单臂路由，R1的Serial0口和R2的Serial0端口连接，R2的Serial0端口连接，均对两台路由配置ospf协议和ppp协议实现两个路由间通信，R2 0&#x2F;0端口配置IP为server的网关并连接交换机SW-2，交换机SW-2连接server。</p>
 ]]></content>
+      <tags>
+        <tag>ICT</tag>
+        <tag>计算机网络</tag>
+        <tag>日常</tag>
+      </tags>
   </entry>
 </search>
