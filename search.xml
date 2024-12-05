@@ -31,15 +31,81 @@
                 ></p>
 <p>这次实验使用了两台路由器，两台交换机，三台主机，其中一台主机用于模拟服务器。  </p>
 <p>由两台主机模拟两个部门，需要实现两个部门之间的通信和两个部门与服务器之间的通信。</p>
-<p>将两个主机ip设置为不同网段的公网IP(实验要求不能使用可复用IP地址)，通过交换机SW-1连接两台主机，此时交换机为三层交换机，将交换机0&#x2F;1~10端口划分为VLAN10，交换机0&#x2F;11~23端口划分为VLAN20，端口均设置为access，对0&#x2F;24口配置为trunk口并放行VLAN10和VLAN20，此端口连接 路由器R1 0&#x2F;0端口，对 R1 0&#x2F;0端口配置两个子接口IP设置为两个部门的网关，此时路由R1为SW-1的单臂路由，R1的Serial0口和R2的Serial0端口连接，R2的Serial0端口连接，均对两台路由配置ospf协议和ppp协议实现两个路由间通信，R2 0&#x2F;0端口配置IP为server的网关并连接交换机SW-2，交换机SW-2连接server。</p>
-<h4 id="设备介绍"><a href="#设备介绍" class="headerlink" title="设备介绍"></a>设备介绍</h4><h4 id="配置命令"><a href="#配置命令" class="headerlink" title="配置命令"></a>配置命令</h4><p>SW-1:</p>
-<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">vlan 10</span><br><span class="line">exit</span><br><span class="line"></span><br><span class="line">vlan 20</span><br><span class="line">exit</span><br><span class="line"></span><br><span class="line">interface range gigabitEthernet 0/1 - 10</span><br><span class="line">switchport mode access</span><br><span class="line">switchport access vlan 10</span><br><span class="line">exit</span><br><span class="line"></span><br><span class="line">interface range gigabitEthernet 0/11 - 0/23</span><br><span class="line">switchport mode access</span><br><span class="line">switchport access vlan 20</span><br><span class="line">exit</span><br><span class="line"></span><br><span class="line">interface gigabitEthernet 0/24</span><br><span class="line">switchport mode trunk</span><br><span class="line">switchport trunk allowed vlan 10,20</span><br><span class="line">exit</span><br></pre></td></tr></table></figure></div>
+<p>将两个主机ip设置为不同网段的公网IP(实验要求不能使用可复用IP地址)，通过交换机SW-1连接两台主机，此时交换机为三层交换机，将交换机0&#x2F;1<del>10端口划分为VLAN10，交换机0&#x2F;11</del>23端口划分为VLAN20，端口均设置为access，对0&#x2F;24口配置为trunk口并放行VLAN10和VLAN20，此端口连接 路由器R1 0&#x2F;0端口，对 R1 0&#x2F;0端口配置两个子接口IP设置为两个部门的网关，此时路由R1为SW-1的单臂路由，R1的Serial2&#x2F;0口和R2的Serial2&#x2F;0端口连接，R2的Serial2&#x2F;0端口连接，均对两台路由配置ospf协议和ppp协议chap认证实现两个路由间通信，200.2.10.0&#x2F;24网段和200.2.20.0&#x2F;24网段属于area1，200.2.100.0&#x2F;24属于area0，200.2.40.0&#x2F;24属于area2，R2 0&#x2F;0端口配置IP为server的网关并连接交换机SW-2，交换机SW-2连接server。</p>
+<h4 id="设备介绍"><a href="#设备介绍" class="headerlink" title="设备介绍"></a>设备介绍</h4><p>这里附上一张机柜图片<br><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/jigui.png"
+                      alt="机柜" title="机柜"
+                ></p>
+<h4 id="配置命令"><a href="#配置命令" class="headerlink" title="配置命令"></a>配置命令</h4><p>SW-1:</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">vlan 10</span><br><span class="line">exit</span><br><span class="line"></span><br><span class="line">vlan 20</span><br><span class="line">exit</span><br><span class="line"></span><br><span class="line">interface range gigabitEthernet 0/1 - 10</span><br><span class="line">switchport mode access</span><br><span class="line">switchport access vlan 10</span><br><span class="line">exit</span><br><span class="line"></span><br><span class="line">interface range gigabitEthernet 0/11 - 23</span><br><span class="line">switchport mode access</span><br><span class="line">switchport access vlan 20</span><br><span class="line">exit</span><br><span class="line"></span><br><span class="line">interface gigabitEthernet 0/24</span><br><span class="line">switchport mode trunk</span><br><span class="line">switchport trunk allowed all</span><br><span class="line">exit</span><br></pre></td></tr></table></figure></div>
 
 <p>R1:</p>
-<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">interface GigabitEthernet 0/0.1</span><br><span class="line">encapsulation dot1Q 10</span><br><span class="line">ip address 200.2.10.254 255.255.255.0</span><br><span class="line">exit</span><br><span class="line"></span><br><span class="line">interface GigabitEthernet 0/0.2</span><br><span class="line">encapsulation dot1Q 20</span><br><span class="line">ip address 200.2.20.254 255.255.255.0</span><br><span class="line">exit</span><br><span class="line"></span><br><span class="line">interface Serial0</span><br><span class="line">ip address 200.2.100.2 255.255.255.0</span><br><span class="line">exit</span><br><span class="line"></span><br><span class="line">router ospf 1</span><br><span class="line">network 200.2.10.0 0.0.0.255 area 0</span><br><span class="line">network 200.2.20.0 0.0.0.255 area 0</span><br><span class="line">network 200.2.100.0 0.0.0.255 area 1</span><br><span class="line">exit</span><br><span class="line"></span><br><span class="line">interface Serial0</span><br><span class="line">encapsulation ppp</span><br><span class="line">ppp authentication chap</span><br><span class="line">username R2 password password</span><br></pre></td></tr></table></figure></div>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">interface gigabitEthernet 0/0.1</span><br><span class="line">encapsulation dot1Q 10</span><br><span class="line">ip address 200.2.10.254 255.255.255.0</span><br><span class="line">exit</span><br><span class="line"></span><br><span class="line">interface gigabitEthernet 0/0.2</span><br><span class="line">encapsulation dot1Q 20</span><br><span class="line">ip address 200.2.20.254 255.255.255.0</span><br><span class="line">exit</span><br><span class="line"></span><br><span class="line">interface serial2/0</span><br><span class="line">ip address 200.2.100.2 255.255.255.0</span><br><span class="line">exit</span><br><span class="line"></span><br><span class="line">router ospf 1</span><br><span class="line">network 200.2.10.0 0.0.0.255 area 1</span><br><span class="line">network 200.2.20.0 0.0.0.255 area 1</span><br><span class="line">network 200.2.100.0 0.0.0.255 area 0</span><br><span class="line">exit</span><br><span class="line"></span><br><span class="line">interface serial2/0</span><br><span class="line">encapsulation ppp</span><br><span class="line">ppp authentication chap</span><br><span class="line">username R2 password ruijie</span><br></pre></td></tr></table></figure></div>
 
 <p>R2:</p>
-<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">interface Serial0</span><br><span class="line">ip address 200.2.100.1 255.255.255.0</span><br><span class="line"></span><br><span class="line">interface GigabitEthernet 0/0</span><br><span class="line">ip address 200.2.40.254 255.255.255.0</span><br><span class="line"></span><br><span class="line">router ospf 1</span><br><span class="line">network 200.2.100.0 0.0.0.255 area 1</span><br><span class="line">network 200.2.40.0 0.0.0.255 area 2</span><br><span class="line"></span><br><span class="line">interface Serial0</span><br><span class="line">encapsulation ppp</span><br><span class="line">ppp authentication chap</span><br><span class="line">username R1 password password</span><br></pre></td></tr></table></figure></div>]]></content>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">interface serial2/0</span><br><span class="line">ip address 200.2.100.1 255.255.255.0</span><br><span class="line"></span><br><span class="line">interface gigabitEthernet 0/0</span><br><span class="line">ip address 200.2.40.254 255.255.255.0</span><br><span class="line"></span><br><span class="line">router ospf 1</span><br><span class="line">network 200.2.100.0 0.0.0.255 area 1</span><br><span class="line">network 200.2.40.0 0.0.0.255 area 2</span><br><span class="line"></span><br><span class="line">interface serial2/0</span><br><span class="line">encapsulation ppp</span><br><span class="line">ppp chap hostname R2</span><br><span class="line">ppp chap password ruijie</span><br></pre></td></tr></table></figure></div>
+
+<h4 id="实验验证"><a href="#实验验证" class="headerlink" title="实验验证"></a>实验验证</h4><h6 id="PPP协议配置"><a href="#PPP协议配置" class="headerlink" title="PPP协议配置"></a>PPP协议配置</h6><p>对R1(DTE)配置:</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/pppR1.png"
+                      alt="R1配置" title="R1配置"
+                ></p>
+<p>对路由器R1的串行接口 Serial 2&#x2F;0 进行配置<br>指定该串行接口使用 PPP(Point-to-Point Protocol) 封装协议<br>启用 CHAP(Challenge Handshake Authentication Protocol) 认证方式<br>配置该串行接口的 IP 地址和子网掩码</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/check_R1.png"
+                      alt="checkR1" title="checkR1"
+                ></p>
+<p><code>Serial 2/0 is UP</code>:表示接口的物理层状态正常，接口已开启且连接设备处于工作状态。<br><code>line protocol is UP</code>:表示数据链路层的通信正常,链路协议(PPP)已成功协商。<br><code>mode DTE</code>:接口工作在 DTE(Data Terminal Equipment) 模式下<br><code>Encapsulation protocol is PPP</code>:串行接口使用 PPP(点对点协议)封装,用于在广域网链路上传输数据</p>
+<p>对R2(DCE)配置:</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/pppR2.png"
+                      alt="R2配置" title="R2配置"
+                ></p>
+<p>配置的是路由器R2的串行接口 Serial 2&#x2F;0<br>配置串行接口使用 PPP(Point-to-Point Protocol) 协议作为封装方式<br>在 CHAP(Challenge Handshake Authentication Protocol)认证过程中，配置本路由器向对端发送的主机名为 R2<br>配置 CHAP 协议的密码为 ruijie<br>配置串行接口的 IP 地址和子网掩码<br>配置接口的时钟速率为 64000 bps</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/check_R2.png"
+                      alt="checkR2" title="checkR2"
+                ></p>
+<p><code>Serial 2/0 is UP</code>:表示接口的物理层状态正常,接口已开启且连接设备处于工作状态。<br><code>line protocol is UP</code>:表示数据链路层的通信正常,链路协议(PPP)已成功协商。<br><code>mode DCE</code>:接口工作在 DCE(Data Communication Equipment) 模式下<br><code>Encapsulation protocol is PPP</code>:串行接口使用 PPP(点对点协议)封装，用于在广域网链路上传输数据。</p>
+<h6 id="ospf协议配置"><a href="#ospf协议配置" class="headerlink" title="ospf协议配置"></a>ospf协议配置</h6><p>对路由器R1配置:</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/ospfR1.png"
+                      alt="ospfR1" title="ospfR1"
+                ></p>
+<p>R1路由表:</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/ospfR1_route.png"
+                      alt="ospfR1" title="ospfR1"
+                ></p>
+<p>对路由器R2配置:</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/ospfR2.png"
+                      alt="ospfR2" title="ospfR2"
+                ></p>
+<p>R2路由表:</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/ospfR2_route.png"
+                      alt="ospfR2" title="ospfR2"
+                ></p>
+<h6 id="不再对连通性进行一一验证-懒了"><a href="#不再对连通性进行一一验证-懒了" class="headerlink" title="不再对连通性进行一一验证(懒了)"></a>不再对连通性进行一一验证(懒了)</h6><h4 id="抓包验证"><a href="#抓包验证" class="headerlink" title="抓包验证"></a>抓包验证</h4>]]></content>
       <tags>
         <tag>ICT</tag>
         <tag>计算机网络</tag>
